@@ -21,11 +21,12 @@ import { BsMinecartLoaded } from "react-icons/bs";
 import { GiTruck } from "react-icons/gi";
 import { RxDashboard } from "react-icons/rx";
 import { RiBilliardsFill } from "react-icons/ri";
-import { Link, NavLink, useNavigate } from "react-router-dom";
-// import { useEffect, useState } from "react";
-// import axios from "axios";
+import {  NavLink, useNavigate } from "react-router-dom";
 import logo1 from "../assets/Siemens_Healthineers_logo.png";
 import { aside_option } from "../common/tablevariabls.js";
+import { useDispatch, useSelector } from "react-redux";
+import {  fetchingdata } from "../Redux/fetures/tablesclice";
+import { useEffect } from "react";
 const Aside = () => {
 
   return (

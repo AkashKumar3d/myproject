@@ -51,6 +51,7 @@ function App() {
         <Route path="/escalations" element={[<Aside />, <Escalations />]} />
         <Route path="/abnormalities" element={[<Aside />, <Abnormalities />]} />
       </Routes>
+      
     </div>
   );
 }
