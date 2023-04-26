@@ -8,18 +8,7 @@ const Charts = () => {
   const nagivate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get("https://fire-hot-hardhat.glitch.me/auth", {
-        headers: { Authorization: "Bearer " + token },
-      })
-      .then((res) => {
-        if (res.data.message === "Authorized") {
-          console.log("Authorized");
-        }
-      })
-      .catch((err) => {
-        nagivate("/");
-      });
+   
   }, []);
 
   return (

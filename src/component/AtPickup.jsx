@@ -4,19 +4,29 @@ import React from "react";
 // import Loader from "./Loader";
 import { FaTruckLoading } from "react-icons/fa";
 import { Atpickup } from "../common/tablevariabls";
-// import { WorkBook, WorkSheet, utils, writeFile } from "xlsx";
+import { WorkBook, WorkSheet, utils, writeFile } from "xlsx";
 // import { useNavigate } from "react-router-dom";
 
 const AtPickup = () => {
 
 
-
+  // export file 
+  const exportExcelFile = () => {
+    const element = document.getElementById("excel_table");
+    let ws = utils.table_to_sheet(element);
+    /* generate workbook and add the worksheet */
+    // console.log(ws,"expost data")
+    let wb = utils.book_new();
+    utils.book_append_sheet(wb, ws, "Sheet1");
+    /* save to file */
+    writeFile(wb, "Atpuckup.xlsx");
+  };
   return (
     <>
       <main>
         <div className="main_table-export">
           <div className="export">
-            <button >
+            <button onClick={exportExcelFile}>
               <h1> EXPORT</h1>
             </button>
           </div>

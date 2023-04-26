@@ -235,6 +235,7 @@ export const Mbr=[
     "ACTUAL ARRIVAL",
     "AT VS GT",
     "GT VS DT",
+    "AT VS DT",
     "GT VS LS",
     "LS VS LE",
     "LE VS DT",
@@ -248,7 +249,7 @@ export const Mbr=[
     "POD SINCE ",
     "POD PIC"
 ]
-
+console.log(Mbr.length, "mbr")
 export const Tracking_update=[
     "gc Number ",
     "Ship To Name",
@@ -258,4 +259,29 @@ export const Tracking_update=[
     "Remarks"
 ]
 
+
 export const qbr=["shipment Number","GC number","So numbber/","order by ","po name","po date ","form","to","pincode","maiteral","bill number","bill Date","bill submited or genr.","grm number","bill status","total distance","additional distance ","zone","rate","loading","unloading","halting charger ","two point loading /unloading","additonal cost","taxable value ","GST","Grand Total","Remarks"]
+
+export const payment =[
+    "Vehicle No.",
+    "Vehicle type ",
+    "Ship to Name",
+    "Ship To Address",
+    "Arrival Time ",
+    "gateInTime vs arrivalTime",
+    "departureTime vs gateInTime",
+    "Podc"
+]
+
+export const pendingorder=[
+    "order number",
+    "Ship To Party",
+    "Ship To Address",
+    "material",
+    "No. of Vehicles",
+    "expected Pickup Date",
+    "expected DELIVERY Date",
+    "Order By ",
+    "Apml Remarks ",
+    "Fit | INC | PUC | NP | PERMIT"
+]

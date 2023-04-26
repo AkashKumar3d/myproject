@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Loader from "./Loader";
 import { VscVmRunning } from "react-icons/vsc";
-import {  utils, writeFile } from "xlsx";
+import { utils, writeFile } from "xlsx";
 import { useNavigate } from "react-router-dom";
 
 const Pod = () => {
@@ -104,18 +104,9 @@ const Pod = () => {
   };
 
   useEffect(() => {
-    axios
-      .get("https://fire-hot-hardhat.glitch.me/auth", {
-        headers: { Authorization: "Bearer " + token },
-      })
-      .then((res) => {
-        if (res.data.message === "Authorized") {
-          fetching();
-        }
-      })
-      .catch((err) => {
-        nagivate("/");
-      });
+
+    fetching();
+
   }, []);
   return (
     <>
@@ -177,7 +168,7 @@ const Pod = () => {
                       <td className="td-main" style={{ lineHeight: "2rem" }}>
                         <span>
                           {res.consignments[0]?.pod &&
-                          res.consignments[0]?.pod?.documents ? (
+                            res.consignments[0]?.pod?.documents ? (
                             <a
                               target="_blank"
                               style={{ color: "#ff00ff", fontWeight: "bold" }}
@@ -196,7 +187,7 @@ const Pod = () => {
                         <br />
                         <span>
                           {res.consignments[0]?.pod &&
-                          res.consignments[0]?.pod?.documents ? (
+                            res.consignments[0]?.pod?.documents ? (
                             <a
                               style={{ color: "#ff00ff", fontWeight: "bold" }}
                               href={

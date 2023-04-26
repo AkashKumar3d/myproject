@@ -50,12 +50,7 @@ const url2Data = {
   },
 };
 
-const url3Data = {
-  filters: {
-    shipmentStatus: ["Planned", "Created"],
-    customer: ["SIEMENS HEALTHCARE PRIVATE LIMITED"],
-  },
-};
+
 
 const url1 =
   "https://apis.fretron.com/automate/autoapi/run/255ab0db-70ed-4933-a0cc-b30b67b70955";
@@ -64,9 +59,8 @@ const url2 =
 
 const url3 = "https://script.googleusercontent.com/a/macros/agarwalpackers.com/echo?user_content_key=liluZGoKsVsI56pRMCbhaWgXdKTyvEzljs8wXtM7ZZwxRvYrxCKbroPEdPlGYY5qa9EQ6vY05Qi1xKcZE-Y8QzE0ZFrkxCriOJmA1Yb3SEsKFZqtv3DaNYcMrmhZHmUMi80zadyHLKCzuoJ5WTSD9188tqLxoWbKVeS6iIHTYzLJN6pUfYvVdeVlG5jFSmZBnga7jA1jJv2Ff-ndfXe0m_cBNwR9NdQAJQvZbyK2Sn14j10FjQKB0WW2AeJY_LhcNDLB45iwYI_Ty7jWPDs9-kALmaJ23tE4L5nWh-m0S0U&lib=Mste7nhVMiwHbCBqAdeBeQ0a1jiuL8Xjw"
 
-// const promise1 =  (url1, url1Data,headers);
-// const promise2 =  (url2, url2Data, headers);
-// const promise3 =  (url3, Infinity);
+// const loginurl=
+
 
 export const fetchingdata= createAsyncThunk("fetchingdata", async()=>{
   const response1=await axios.post(url1, url1Data,headers);
@@ -76,13 +70,16 @@ export const fetchingdata= createAsyncThunk("fetchingdata", async()=>{
   const result=[response1, response2 , response3]
  return result
 })
+
+
 const traveldata=createSlice({
   name: "tableslice",
   initialState:{
     alldata:[],
     loading:true,
-    error: ""
+    error: "",
   },
+
   extraReducers: (builder) => {
     builder
       .addCase(fetchingdata.pending, (state) => {
@@ -95,8 +92,11 @@ const traveldata=createSlice({
       .addCase(fetchingdata.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-      });
+      })
+     
   },
 })
+
+
 
 export default traveldata.reducer;

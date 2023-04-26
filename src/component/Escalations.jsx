@@ -9,6 +9,7 @@ const Escalations = () => {
   
   return (
     <>
+    
       <main>
         <div className="main_table-heading">
           <div className="heading">

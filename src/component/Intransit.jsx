@@ -1,16 +1,206 @@
-import React from "react";
-// import { useState, useEffect } from "react";
-// import axios from "axios";
+import React, { useState, useEffect } from "react";
 import L from "leaflet";
-// import Loader from "./Loader";
+import Loader from "./Loader";
 import { TbTruckDelivery } from "react-icons/tb";
 import { intransit } from "../common/tablevariabls";
-// import { utils, writeFile } from "xlsx";
+import { utils, writeFile } from "xlsx";
 // import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchingdata } from "../Redux/fetures/tablesclice";
 
 const Intransit = () => {
+  const alldata = useSelector((state) => state.app.alldata)
+  const loading = useSelector((state) => state.app.loading)
+  console.log(alldata, "intransit table ");
+  console.log(loading, "intransit loader ");
+
+  const dispatch = useDispatch();
+
+  let pendingResponse = [];
+  for (let i = 0; i < alldata[1]?.data.data.length; i++) {
+    if (
+      alldata[1].data.data[i].shipmentTrackingStatus ===
+      "Enroute For Delivery"
+    ) {
+      pendingResponse.push(alldata[1].data.data[i]);
+    }
+  }
+
+  console.log(pendingResponse, "pendingResponse")
+
+  const pink = [];
+  pendingResponse.map((res) => {
+    for (let i = 0; i < alldata[0]?.data.data.length; i++) {
+      if (
+        res.freightUnitLineItemId ===
+        alldata[0].data.data[i]?.lineItems[0]
+          ?.freightUnitLineItemIds[0] ||
+
+        res.freightUnitLineItemId ===
+        alldata[0].data.data[i]?.lineItems[0]
+          ?.freightUnitLineItemIds[1] ||
+
+        res.freightUnitLineItemId ===
+        alldata[0].data.data[i]?.lineItems[1]
+          ?.freightUnitLineItemIds[0] ||
+
+        res.freightUnitLineItemId ===
+        alldata[0].data.data[i]?.lineItems[2]
+          ?.freightUnitLineItemIds[0] ||
+
+        res.freightUnitLineItemId ===
+        alldata[0].data.data[i]?.lineItems[3]
+          ?.freightUnitLineItemIds[0]
+      ) {
+        var obj = {
+          order: alldata[0].data.data[i],
+          shipment: res,
+        };
+        pink.push(obj);
+      } else {
+        pink.push({ noMatch: true, ...res });
+      }
+    }
+  });
+  console.log(pink, "pink")
+
+  let combo = [];
+  pink.map((res) => {
+    if (res.shipment) {
+      combo.push(res);
+    }
+  });
+  console.log(combo, "combodata")
 
 
+  var datamain = [];
+  for (var i = 0; i < alldata[2]?.data.length; i++) {
+    if (
+      alldata[2].data[i]?.rc_regn_no !== "" &&
+      alldata[2].data[i]?.rc_regn_no !== "#N/A" &&
+      alldata[2].data[i]?.rc_regn_no !== "Vehicle Number"
+    ) {
+      var obj = {
+        rc_fit_upto: alldata[2].data[i].rc_fit_upto,
+        rc_regn_no: alldata[2].data[i]?.rc_regn_no,
+        rc_insurance_upto: alldata[2].data[i]?.rc_insurance_upto,
+        rc_pucc_upto: alldata[2].data[i]?.rc_pucc_upto,
+        rc_np_upto: alldata[2].data[i]?.rc_np_upto,
+        rc_permit_valid_upto: alldata[2].data[i]?.rc_permit_valid_upto,
+      };
+      datamain.push(obj);
+    }
+  }
+
+  var main = [];
+  combo.map((res) => {
+    for (var n = 0; n < datamain.length; n++) {
+      if (
+        datamain[n].rc_regn_no ===
+        res.shipment.fleetInfo.vehicle.vehicleRegistrationNumber
+      ) {
+        main.push(datamain[n]);
+      }
+    }
+  });
+
+
+
+  function subtractDates1(date1, date2) {
+    const difference = date1 - date2;
+    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor(
+      (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    );
+    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+    const re = `${days} D ${hours} H ${minutes} M`;
+    return re.toString();
+  }
+
+  function remaingkms(a) {
+    var kms = Math.floor(a / 1000);
+    const re = kms + "kms";
+    return re;
+  }
+
+  function color(a) {
+    for (let i = 0; i < main.length; i++) {
+      let fit = a[i].rc_fit_upto;
+      let inc = a[i].rc_insurance_upto;
+      let puc = a[i].rc_pucc_upto;
+      let np = a[i].rc_np_upto;
+      let permit = a[i].rc_permit_valid_upto;
+
+      if (fit.rc_fit_upto) {
+        return false;
+      } else if (inc.rc_insurance_upto) {
+        return false;
+      } else if (puc.rc_pucc_upto) {
+        return false;
+      } else if (np.rc_np_upto) {
+        return false;
+      } else if (permit.rc_permit_valid_upto) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+
+  function color_eway(a) {
+    const now = new Date();
+    if (a < now.getTime()) {
+      return false
+    } else {
+      return true
+    }
+  }
+
+  function differentdate(a) {
+    let date = new Date(a);
+    let milliseconds = date.getTime();
+    const currentDate = new Date();
+    const currentTimestamp = currentDate.getTime();
+    const expectedPickupDate = milliseconds;
+    const expectedPickupTimestamp = expectedPickupDate;
+    let days, hours, minutes;
+    if (expectedPickupTimestamp > currentTimestamp) {
+      const difference = expectedPickupTimestamp - currentTimestamp;
+      days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      hours = Math.floor(
+        (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      );
+      minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+    } else if (currentTimestamp > expectedPickupTimestamp) {
+      const difference = currentTimestamp - expectedPickupTimestamp;
+      days = Math.floor(difference / (1000 * 60 * 60 * 24)) * -1;
+      hours =
+        Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) *
+        -1;
+      minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)) * -1;
+    } else {
+      days = 0;
+      hours = 0;
+      minutes = 0;
+    }
+    const re = days + "d" + hours + "h" + minutes + "m";
+    return re;
+  }
+
+  // export file 
+  const exportExcelFile = () => {
+    const element = document.getElementById("excel_table");
+    let ws = utils.table_to_sheet(element);
+    /* generate workbook and add the worksheet */
+    // console.log(ws,"expost data")
+    let wb = utils.book_new();
+    utils.book_append_sheet(wb, ws, "Sheet1");
+    /* save to file */
+    writeFile(wb, "Intransitdata.xlsx");
+  };
+  useEffect(() => {
+    dispatch(fetchingdata())
+  }, [])
   // map
   var origindata = [];
   var destinationdata = [];
@@ -361,57 +551,76 @@ const Intransit = () => {
 
   return (
     <>
-      <main>
-        <div className="main_table-export">
-          <div className="export">
-            <button >
-              <h1> EXPORT</h1>
-            </button>
+      {
+        loading ? (<Loader />) : (
+        <main>
+          <div className="main_table-export">
+            <div className="export">
+              <button onClick={exportExcelFile}>
+                <h1> EXPORT</h1>
+              </button>
+            </div>
           </div>
-        </div>
-        <div className="main_table-heading">
-          <div className="heading">
-            <TbTruckDelivery
-              className="heading-icon"
-              style={{ color: "orange" }}
-            />
-            <h1>
-              INTRANSIT <span>21</span>
-            </h1>
+          <div className="main_table-heading">
+            <div className="heading">
+              <TbTruckDelivery
+                className="heading-icon"
+                style={{ color: "orange" }}
+              />
+              <h1>
+                INTRANSIT <span>{combo.length}</span>
+              </h1>
+            </div>
           </div>
-        </div>
-        
+
           <>
             <table className=" main-table" id="excel_table">
               <thead>
                 <tr>
-                  {intransit.map((res)=>{
-              return(<th className="table-th">{res}</th>)
+                  {intransit.map((res) => {
+                    return (<th className="table-th">{res}</th>)
                   })
-                    }
+                  }
                 </tr>
               </thead>
               <tbody>
-                
+                {
+                  combo.map((res) => {
+                    return (
+
                       <tr>
-                        <td className="td-main"></td>
+                        <td className="td-main">{res.order.orderNumber}</td>
                         <td
                           className="td-main"
-                          style={{ fontWeight: "bolder", color: "#00ff00" }}
+                          style={{ fontWeight: "bolder", color: color_eway(res.shipment.consignments[0].eWayBillExpiryDate) ? "#00ff00" : "red" }}
                         >
-                          eway
+                          {differentdate(res.shipment.consignments[0].eWayBillExpiryDate) <= '0d0h0m' ? "--" : differentdate(res.shipment.consignments[0].eWayBillExpiryDate)}
+
                         </td>
                         <td className="td-main">
-                          
+                          {res.shipment.consignments[0]?.consignmentNo
+                            ? res.shipment.consignments[0]?.consignmentNo
+                            : "--"}
                         </td>
                         <td className="td-main">
-                          
+                          {
+                            res.shipment.fleetInfo.vehicle
+                              .vehicleRegistrationNumber
+                          }
                         </td>
                         <td className="td-main">
-                          
+                          {res.shipment.fleetInfo.driver.mobileNumber
+                            ? res.shipment.fleetInfo.driver.mobileNumber
+                            : "-"}
                         </td>
                         <td className="td-main">
-                          
+                          {
+                            res.shipment["fleetInfo"]["vehicle"][
+                              "vehicleLoadType"
+                            ]["name"].split("-")[1] ? res.shipment["fleetInfo"]["vehicle"][
+                              "vehicleLoadType"
+                            ]["name"].split("-")[1] : "--"
+                          }
                         </td>
                         <td
                           className="td-main"
@@ -420,7 +629,10 @@ const Intransit = () => {
                             fontWeight: "bolder",
                           }}
                         >
-                          
+                          {remaingkms(
+                            res.shipment.shipmentStages[1].tripPoint
+                              .totalDistance
+                          )}
                         </td>
                         <td
                           className="td-main"
@@ -429,18 +641,23 @@ const Intransit = () => {
                             fontWeight: "bolder",
                           }}
                         >
-                          
+                          {remaingkms(
+                            res.shipment.shipmentStages[1].tripPoint
+                              .remainingDistance
+                          )}
                         </td>
                         <td
                           className="td-main"
                           style={{ color: "red", fontWeight: "bolder" }}
                         >
-                          
+                          {res.shipment.currentLocation?.address
+                            ? res.shipment.currentLocation?.address
+                            : "--"}
                         </td>
                         <td className="td-main">
-                          
+                          {res.order.lineItems[0].consigner.name.split("-")[1]}
                         </td>
-                      
+
                         <td
                           className="td-main"
                           style={{
@@ -448,39 +665,55 @@ const Intransit = () => {
                             fontWeight: "bolder",
                           }}
                         >
-                          
+                          {res.order.customFields
+                            .filter(
+                              (res) => res.fieldKey === "Consignee Address"
+                            )
+                            .map((res) => {
+                              return <>{res.value ? res.value : "--"}</>;
+                            })}
                         </td>
 
                         <td className="td-main">
                           <button
                             className="color-button"
                             style={{
-                              backgroundColor: "red"
+                              backgroundColor: color(main)
+                                ? "#00ff00"
+                                : "red",
                             }}
                           ></button>
 
                           <button
                             className="color-button"
                             style={{
-                              backgroundColor: "red"
+                              backgroundColor: color(main)
+                                ? "#00ff00"
+                                : "red",
                             }}
                           ></button>
                           <button
                             className="color-button"
                             style={{
-                              backgroundColor: "red"
+                              backgroundColor: color(main)
+                                ? "#00ff00"
+                                : "red",
                             }}
                           ></button>
                           <button
                             className="color-button"
                             style={{
-                              backgroundColor:"red"
+                              backgroundColor: color(main)
+                                ? "#00ff00"
+                                : "red",
                             }}
                           ></button>
                           <button
                             className="color-button"
                             style={{
-                              backgroundColor:"red"
+                              backgroundColor: color(main)
+                                ? "#00ff00"
+                                : "red",
                             }}
                           ></button>
                         </td>
@@ -489,30 +722,66 @@ const Intransit = () => {
                           className="td-main"
                           style={{
                             fontWeight: "bolder",
-                            color:"red"
+                            color:
+                              differentdate(res.value) > 86400000
+                                ? "#00ff00"
+                                : differentdate(res.value) > 21600000 &&
+                                  differentdate(res.value) < 86400000
+                                  ? "yellow"
+                                  : differentdate(res.value) > 0 &&
+                                    differentdate(res.value) < 21600000
+                                    ? "orange"
+                                    : "red",
                           }}
                         >
-                         
+                          {res.order.customFields
+                            .filter(
+                              (res) => res.fieldKey === "EXPECTED TARGET DATE:"
+                            )
+                            .map((res) => {
+                              return <>{differentdate(res.value)}</>;
+                            })}
                         </td>
                         <td
                           className="td-main"
                           style={{
                             fontWeight: "bolder",
-                            color:"red"
+                            color:
+                              subtractDates1(
+                                res.shipment.shipmentStages[0].gateInTime,
+                                res.shipment.shipmentStages[0].arrivalTime
+                              ) > "-1 days 0 hours 0 minutes"
+                                ? "#00ff00"
+                                : "red",
                           }}
                         >
-                          
+                          {" "}
+                          {subtractDates1(
+                            res.shipment.shipmentStages[0].gateInTime,
+                            res.shipment.shipmentStages[0].arrivalTime
+                          )}
                         </td>
                         <td
                           className="td-main"
                           style={{
                             fontWeight: "bolder",
-                            color:"red"
+                            color:
+                              subtractDates1(
+                                res.shipment.shipmentStages[0].departureTime,
+                                res.shipment.shipmentStages[0].gateInTime
+                              ) > "-1 days 0 hours 0 minutes"
+                                ? "#00ff00"
+                                : "red",
                           }}
                         >
-                         
+                          {subtractDates1(
+                            res.shipment.shipmentStages[0].departureTime,
+                            res.shipment.shipmentStages[0].gateInTime
+                          )}
                         </td>
                       </tr>
+                    )
+                  })}
               </tbody>
             </table>
 
@@ -545,8 +814,9 @@ const Intransit = () => {
               </div>
             </div>
           </>
-       
-      </main>
+
+        </main>
+        )}
     </>
   );
 };
