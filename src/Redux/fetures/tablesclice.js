@@ -23,7 +23,7 @@ const url1Data = {
       "SHPL-BANGALORE WAREHOUSE- SIEMENS HEALTHCARE PVT.LTD.",
       "SHPL-CHENNAI WAREHOUSE- SIEMENS HEALTHCARE PVT.LTD.",
       "SHPL-DELHI WAREHOUSE- SIEMENS HEALTHCARE PVT.LTD.",
-      "SHPL - NAVA SHEVA- SIEMENS HEALTHCARE PVT LTD",
+      "SHPL - NHAVA SHEVA- SIEMENS HEALTHCARE PVT LTD",
       "SHPL- KOLKATA SEAPORT- SIEMENS HEALTHCARE PVT.LTD.",
       "SHPL- CHENNAI AIRPORT- SIEMENS HEALTHCARE PVT.LTD",
       "SHPL - BGR WAREHOUSE- SIEMENS HEALTHCARE PVT.LTD",
@@ -32,12 +32,13 @@ const url1Data = {
       "SHPL - MUMBAI AIRPORT - SIEMENS HEALTHCARE PVT LTD",
       "SHPL - PRESS METAL COMPANY - SIEMENS HEALTHCARE PVT. LTD.",
       "SHPL - RAJLAXMI LOGISTICS PARK- SIEMENS HEALTHCARE PVT LTD",
+      "SHPL-GURGAON HARIYANA-SEIMENS HEALTHCARE PVT. LTD."
     ],
     orderDate: {
-      from: 1680287400000,
+      from: 1681065000000
     },
   },
-  limit: 5000,
+  limit: 5000
 };
 
 const url2Data = {
@@ -45,7 +46,7 @@ const url2Data = {
     shipmentStatus: ["Planned", "Created", "Completed"],
     customer: ["SIEMENS HEALTHCARE PRIVATE LIMITED"],
     shipmentDate: {
-      from: 1680287400000,
+      from: 1681065000000,
     },
   },
 };
@@ -62,21 +63,21 @@ const url3 = "https://script.googleusercontent.com/a/macros/agarwalpackers.com/e
 // const loginurl=
 
 
-export const fetchingdata= createAsyncThunk("fetchingdata", async()=>{
-  const response1=await axios.post(url1, url1Data,headers);
-  const response2=await axios.post(url2, url2Data, headers)
+export const fetchingdata = createAsyncThunk("fetchingdata", async () => {
+  const response1 = await axios.post(url1, url1Data, headers);
+  const response2 = await axios.post(url2, url2Data, headers)
   const response3 = await axios.get(url3, Infinity);
-  
-  const result=[response1, response2 , response3]
- return result
+
+  const result = [response1, response2, response3]
+  return result
 })
 
 
-const traveldata=createSlice({
+const traveldata = createSlice({
   name: "tableslice",
-  initialState:{
-    alldata:[],
-    loading:true,
+  initialState: {
+    alldata: [],
+    loading: true,
     error: "",
   },
 
@@ -87,13 +88,13 @@ const traveldata=createSlice({
       })
       .addCase(fetchingdata.fulfilled, (state, action) => {
         state.loading = false;
-        state.alldata= action.payload;
+        state.alldata = action.payload;
       })
       .addCase(fetchingdata.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       })
-     
+
   },
 })
 

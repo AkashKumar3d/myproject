@@ -28,6 +28,12 @@ import { useDispatch, useSelector } from "react-redux";
 import {  fetchingdata } from "../Redux/fetures/tablesclice";
 import { useEffect } from "react";
 const Aside = () => {
+const navigate=useNavigate()
+  const handleLogout = () => {
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("user");
+    navigate("/");
+  };
 
   return (
     <div className="container">
@@ -273,7 +279,7 @@ const Aside = () => {
               <span>
                 <AiOutlineLogout className="custome-svg" />
               </span>
-              <button className="button__logout" >
+              <button className="button__logout" onClick={handleLogout}>
                 LOG OUT
               </button>
             </div>

@@ -45,6 +45,7 @@ export default function LoginForm() {
       alert("invalid password or username");
       setloading(false)
     }
+
   };
 
 
@@ -126,7 +127,7 @@ export default function LoginForm() {
                   style={{
                     fontSize: "1.5rem",
                     color: "white",
-                    backgroundColor: "transparent" //: "black",
+                    backgroundColor:  "black",
                   }}
                   className="btn btn-primary btn-block mb-4"
                 >

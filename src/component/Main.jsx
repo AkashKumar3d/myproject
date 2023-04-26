@@ -78,10 +78,6 @@ console.log(intransit,"intransit");
   useEffect(()=>{
     dispatch(fetchingdata())
   },[])
-
-  
-
- 
   return (  
     <div>
     {

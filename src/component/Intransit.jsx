@@ -207,61 +207,61 @@ const Intransit = () => {
   var vehicleloaction = [];
   var vehiclenumber = [];
   var remaingkm = [];
-  // for (var i = 0; i < combo.length; i++) {
-  //   remaingkm.push(
-  //     Math.round(
-  //       combo[i].shipment["shipmentStages"][1]["tripPoint"]["remainingDistance"]
-  //     ) / 1000
-  //   );
-  //   var latitude4 =
-  //     combo[i].shipment.currentLocation !== null
-  //       ? Number(combo[i].shipment.currentLocation.latitude)
-  //       : 19.076;
-  //   var longitude4 =
-  //     combo[i].shipment.currentLocation !== null
-  //       ? Number(combo[i].shipment.currentLocation.longitude)
-  //       : 72.8777;
-  //   vehicleloaction.push(latitude4 + "," + longitude4);
-  //   vehiclenumber.push(
-  //     combo[i].shipment.fleetInfo.vehicle.vehicleRegistrationNumber
-  //   );
-  //   if (
-  //     combo[i].shipment.shipmentStages[0].hub !== null &&
-  //     combo[i].shipment.shipmentStages[1].hub
-  //   ) {
-  //     var latitude = Number(
-  //       combo[i].shipment.shipmentStages[0].place.center.latitude
-  //     );
-  //     var longitude = Number(
-  //       combo[i].shipment.shipmentStages[0].place.center.longitude
-  //     );
-  //     origindata.push(latitude + "," + longitude);
-  //     var latitude2 = Number(
-  //       combo[i].shipment.shipmentStages[1].place.center.latitude
-  //     );
-  //     var longitude2 = Number(
-  //       combo[i].shipment.shipmentStages[1].place.center.longitude
-  //     );
-  //     destinationdata.push(latitude2 + "," + longitude2);
-  //   } else {
-  //     // origindata.push(datamain[i].shipmentStages[0].place.center.latitude+','+datamain[i].shipmentStages[0].place.center.longitude)
-  //     // destinationdata.push(datamain[i].shipmentStages[1].place.center.latitude+','+datamain[i].shipmentStages[1].place.center.longitude)
-  //     var latitude = Number(
-  //       combo[i].shipment.shipmentStages[0].place.center.latitude
-  //     );
-  //     var longitude = Number(
-  //       combo[i].shipment.shipmentStages[0].place.center.longitude
-  //     );
-  //     origindata.push(latitude + "," + longitude);
-  //     var latitude2 = Number(
-  //       combo[i].shipment.shipmentStages[1].place.center.latitude
-  //     );
-  //     var longitude2 = Number(
-  //       combo[i].shipment.shipmentStages[1].place.center.longitude
-  //     );
-  //     destinationdata.push(latitude2 + "," + longitude2);
-  //   }
-  // }
+  for (var i = 0; i < combo.length; i++) {
+    remaingkm.push(
+      Math.round(
+        combo[i].shipment["shipmentStages"][1]["tripPoint"]["remainingDistance"]
+      ) / 1000
+    );
+    var latitude4 =
+      combo[i].shipment.currentLocation !== null
+        ? Number(combo[i].shipment.currentLocation.latitude)
+        : 19.076;
+    var longitude4 =
+      combo[i].shipment.currentLocation !== null
+        ? Number(combo[i].shipment.currentLocation.longitude)
+        : 72.8777;
+    vehicleloaction.push(latitude4 + "," + longitude4);
+    vehiclenumber.push(
+      combo[i].shipment.fleetInfo.vehicle.vehicleRegistrationNumber
+    );
+    if (
+      combo[i].shipment.shipmentStages[0].hub !== null &&
+      combo[i].shipment.shipmentStages[1].hub
+    ) {
+      var latitude = Number(
+        combo[i].shipment.shipmentStages[0].place.center.latitude
+      );
+      var longitude = Number(
+        combo[i].shipment.shipmentStages[0].place.center.longitude
+      );
+      origindata.push(latitude + "," + longitude);
+      var latitude2 = Number(
+        combo[i].shipment.shipmentStages[1].place.center.latitude
+      );
+      var longitude2 = Number(
+        combo[i].shipment.shipmentStages[1].place.center.longitude
+      );
+      destinationdata.push(latitude2 + "," + longitude2);
+    } else {
+      // origindata.push(datamain[i].shipmentStages[0].place.center.latitude+','+datamain[i].shipmentStages[0].place.center.longitude)
+      // destinationdata.push(datamain[i].shipmentStages[1].place.center.latitude+','+datamain[i].shipmentStages[1].place.center.longitude)
+      var latitude = Number(
+        combo[i].shipment.shipmentStages[0].place.center.latitude
+      );
+      var longitude = Number(
+        combo[i].shipment.shipmentStages[0].place.center.longitude
+      );
+      origindata.push(latitude + "," + longitude);
+      var latitude2 = Number(
+        combo[i].shipment.shipmentStages[1].place.center.latitude
+      );
+      var longitude2 = Number(
+        combo[i].shipment.shipmentStages[1].place.center.longitude
+      );
+      destinationdata.push(latitude2 + "," + longitude2);
+    }
+  }
   navigator.geolocation.getCurrentPosition((position) => {
     var coordinates = origindata;
     var datatr = coordinates.map((x) => [
