@@ -18,7 +18,8 @@ const Completed = () => {
     }
   }
   ;
-
+ console.log(pendingResponse.length, "completed responseb ")
+   
   const pink = [];
   pendingResponse.map((res) => {
     for (let i = 0; i < alldata[0]?.data.data.length; i++) {
